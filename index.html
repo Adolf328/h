@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discovery - EduFinance Hub</title>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
+</head>
+<body>
+
+<%@ include file="includes/header.jspf" %>
+
+<main class="page">
+    <div class="page-heading">
+        <h1>Discovery</h1>
+        <p>Browse funding opportunities. This screen is frontend-only: results are generated
+           from sample data in the browser, no server call is made.</p>
+    </div>
+
+    <section class="filter-bar" aria-label="Search and filter opportunities">
+        <input type="text" id="searchInput" placeholder="Search by name or keyword..." aria-label="Search">
+
+        <select id="typeFilter" aria-label="Filter by type">
+            <option value="all">All types</option>
+            <option value="Bursary">Bursary</option>
+            <option value="Scholarship">Scholarship</option>
+            <option value="Grant">Grant</option>
+        </select>
+
+        <select id="levelFilter" aria-label="Filter by study level">
+            <option value="all">All study levels</option>
+            <option value="Undergraduate">Undergraduate</option>
+            <option value="Postgraduate">Postgraduate</option>
+            <option value="TVET/Diploma">TVET / Diploma</option>
+        </select>
+
+        <select id="sortFilter" aria-label="Sort results">
+            <option value="deadline">Sort: Closest deadline</option>
+            <option value="name">Sort: Name (A-Z)</option>
+        </select>
+    </section>
+
+    <p id="resultCount" class="result-count"></p>
+
+    <section id="resultsGrid" class="results-grid" aria-live="polite">
+        <!-- Populated by js/discovery.js -->
+    </section>
+
+    <p id="emptyState" class="empty-state" hidden>No opportunities match your search. Try different filters.</p>
+</main>
+
+<!-- Detail modal -->
+<div id="detailModal" class="modal" hidden>
+    <div class="modal-content">
+        <button class="modal-close" id="modalClose" aria-label="Close">&times;</button>
+        <span id="modalType" class="badge"></span>
+        <h2 id="modalName"></h2>
+           <dt>Requirements</dt><dd id="modalRequirements"></dd>
+        </dl>
+        <p id="modalDescription"></p>
+        <button class="btn btn-primary" id="modalApply">Start application</button>
+    </div>
+</div>
+
+
+
+<script src="${pageContext.request.contextPath}/js/discovery.js"></script>
+</body>
+</html>
+      <dl class="modal-meta">
+            <dt>Deadline</dt><dd id="modalDeadline"></dd>
+            <dt>Study level</dt><dd id="modalLevel"></dd>
+            <dt>Requirements</dt><dd id="modalRequirements"></dd>
+        </dl>
+        <p id="modalDescription"></p>
+        <button class="btn btn-primary" id="modalApply">Start application</button>
+        
+    </div>
+</div>
+
+<script src="${pageContext.request.contextPath}/js/discovery.js"></script>
+</body>
+</html>
+ 
