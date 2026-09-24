@@ -1,73 +1,1107 @@
-!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Discovery - EduFinance Hub</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>EduFinance Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink:        #0B1220;
+    --surface:    #121B2E;
+    --surface-2:  #17223B;
+    --line:       #253352;
+    --accent:     #4C6FFF;
+    --accent-dim: #3350C7;
+    --amber:      #F2A93B;
+    --text:       #EDF1F7;
+    --text-muted: #8B95AC;
+    --text-faint: #5B6684;
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --font-display: 'Space Grotesk', 'Segoe UI', sans-serif;
+    --font-body: 'Inter', 'Segoe UI', sans-serif;
+    --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+  }
+
+  @media (prefers-color-scheme: light) {
+    :root:not([data-theme="dark"]) {
+      /* App is intentionally dark-only, a deliberate choice for the tool's tone */
+    }
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body { height: 100%; }
+
+  body {
+    background: var(--ink);
+    color: var(--text);
+    font-family: var(--font-body);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    min-height: 100%;
+  }
+
+  a { color: inherit; }
+
+  ::selection { background: var(--accent); color: #fff; }
+
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  /* ---------- layout shell ---------- */
+
+  .app-header {
+    position: sticky;
+    top: 0;
+    padding-top: env(safe-area-inset-top, 0px);
+    z-index: 40;
+    background: rgba(11, 18, 32, 0.88);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .header-row {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.05rem;
+    letter-spacing: -0.01em;
+  }
+
+  .brand-mark {
+    width: 30px;
+    height: 30px;
+    border-radius: 7px;
+    background: linear-gradient(135deg, var(--accent), var(--accent-dim));
+    display: grid;
+    place-items: center;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 500;
+    color: #fff;
+    flex-shrink: 0;
+  }
+
+  .tabs {
+    display: flex;
+    gap: 4px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 3px;
+  }
+
+  .tab-btn {
+    appearance: none;
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    font-weight: 500;
+    padding: 7px 16px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: color 0.15s ease, background 0.15s ease;
+    white-space: nowrap;
+  }
+
+  .tab-btn:hover { color: var(--text); }
+
+  .tab-btn[aria-selected="true"] {
+    background: var(--accent);
+    color: #fff;
+  }
+
+  .view { display: none; }
+  .view.is-active { display: block; }
+
+  .shell {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 0 24px 80px;
+  }
+
+  /* ---------- overview / hero ---------- */
+
+  .hero {
+    position: relative;
+    padding: 64px 0 48px;
+    overflow: hidden;
+  }
+
+  .hero-grid-bg {
+    position: absolute;
+    inset: -20% -10% auto -10%;
+    height: 480px;
+    opacity: 0.5;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .hero-inner { position: relative; z-index: 1; }
+
+  .eyebrow-line {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--accent);
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    margin-bottom: 18px;
+  }
+
+  .eyebrow-line::before {
+    content: "";
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--amber);
+    box-shadow: 0 0 0 3px rgba(242, 169, 59, 0.18);
+  }
+
+  .hero h1 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(2rem, 4.4vw, 3.1rem);
+    line-height: 1.08;
+    letter-spacing: -0.02em;
+    max-width: 15ch;
+  }
+
+  .hero p.lede {
+    margin-top: 18px;
+    color: var(--text-muted);
+    font-size: 1.05rem;
+    max-width: 52ch;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 30px;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 0.9rem;
+    padding: 11px 20px;
+    border-radius: var(--radius-sm);
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: background 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
+  }
+
+  .btn:active { transform: translateY(1px); }
+
+  .btn-primary { background: var(--accent); color: #fff; }
+  .btn-primary:hover { background: var(--accent-dim); }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--text);
+    border-color: var(--line);
+  }
+  .btn-ghost:hover { border-color: var(--text-faint); }
+
+  .stat-rail {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    margin-top: 56px;
+  }
+
+  .stat {
+    background: var(--surface);
+    padding: 22px 24px;
+  }
+
+  .stat-value {
+    font-family: var(--font-mono);
+    font-size: 1.9rem;
+    font-weight: 500;
+    color: var(--text);
+    letter-spacing: -0.01em;
+  }
+
+  .stat-value .unit { font-size: 1rem; color: var(--text-muted); margin-left: 2px; }
+
+  .stat-label {
+    margin-top: 6px;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+  }
+
+  .section-heading {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+    margin: 72px 0 20px;
+  }
+
+  .section-heading h2 {
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    font-weight: 600;
+  }
+
+  .section-heading .link-out {
+    font-size: 0.85rem;
+    color: var(--accent);
+    font-weight: 600;
+    cursor: pointer;
+    background: none;
+    border: none;
+    font-family: var(--font-body);
+  }
+
+  .feature-pair {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  @media (max-width: 720px) {
+    .feature-pair, .stat-rail { grid-template-columns: 1fr; }
+  }
+
+  .feature-card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    padding: 24px;
+    cursor: pointer;
+    transition: border-color 0.15s ease;
+  }
+
+  .feature-card:hover { border-color: var(--accent-dim); }
+
+  .feature-card .kicker {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--amber);
+  }
+
+  .feature-card h3 {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    margin: 8px 0 6px;
+  }
+
+  .feature-card p {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+  }
+
+  /* ---------- discovery ---------- */
+
+  .page-head {
+    padding: 44px 0 8px;
+  }
+
+  .page-head h1 {
+    font-family: var(--font-display);
+    font-size: 1.9rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  .page-head p {
+    color: var(--text-muted);
+    margin-top: 8px;
+    max-width: 60ch;
+  }
+
+  .control-row {
+    display: flex;
+    gap: 10px;
+    margin: 28px 0 14px;
+    flex-wrap: wrap;
+  }
+
+  .search-field {
+    flex: 1 1 240px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    padding: 10px 14px;
+  }
+
+  .search-field input {
+    background: none;
+    border: none;
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 0.92rem;
+    width: 100%;
+    outline: none;
+  }
+
+  .search-field input::placeholder { color: var(--text-faint); }
+  .search-field svg { flex-shrink: 0; color: var(--text-faint); }
+
+  select.control-select {
+    background: var(--surface);
+    color: var(--text);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    padding: 10px 14px;
+    font-family: var(--font-body);
+    font-size: 0.88rem;
+  }
+
+  .chip-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
+  }
+
+  .chip {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    padding: 6px 13px;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    background: var(--surface);
+    color: var(--text-muted);
+    cursor: pointer;
+  }
+
+  .chip[aria-pressed="true"] {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(76, 111, 255, 0.08);
+  }
+
+  .result-meta {
+    color: var(--text-faint);
+    font-size: 0.82rem;
+    margin-bottom: 14px;
+  }
+
+  .opp-list {
+    border-top: 1px solid var(--line);
+  }
+
+  .opp-row {
+    display: grid;
+    grid-template-columns: 3px 1fr auto auto;
+    align-items: center;
+    gap: 20px;
+    padding: 18px 6px;
+    border-bottom: 1px solid var(--line);
+    cursor: pointer;
+    transition: background 0.12s ease;
+  }
+
+  .opp-row:hover { background: var(--surface); }
+
+  .opp-accent { align-self: stretch; border-radius: 2px; }
+  .opp-accent.type-bursary { background: var(--accent); }
+  .opp-accent.type-scholarship { background: var(--amber); }
+  .opp-accent.type-grant { background: #4FD1A5; }
+
+  .opp-main .opp-type {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--text-faint);
+    text-transform: none;
+  }
+
+  .opp-main h3 {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: 600;
+    margin-top: 3px;
+  }
+
+  .opp-main .opp-level {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    margin-top: 3px;
+  }
+
+  .opp-deadline {
+    text-align: right;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--amber);
+    white-space: nowrap;
+  }
+
+  .opp-deadline .label {
+    display: block;
+    color: var(--text-faint);
+    font-size: 0.68rem;
+    font-family: var(--font-body);
+    margin-bottom: 2px;
+  }
+
+  .opp-arrow { color: var(--text-faint); }
+
+  .empty-state {
+    text-align: center;
+    color: var(--text-muted);
+    padding: 60px 0;
+    font-size: 0.92rem;
+  }
+
+  /* ---------- detail panel ---------- */
+
+  .panel-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(6, 9, 16, 0.6);
+    z-index: 60;
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .panel-overlay[hidden] { display: none; }
+
+  .panel {
+    width: min(420px, 100%);
+    height: 100%;
+    background: var(--surface);
+    border-left: 1px solid var(--line);
+    padding: 28px;
+    overflow-y: auto;
+    animation: slide-in 0.22s ease;
+  }
+
+  @keyframes slide-in {
+    from { transform: translateX(24px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .panel { animation: none; }
+  }
+
+  .panel-close {
+    background: none;
+    border: 1px solid var(--line);
+    color: var(--text-muted);
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-size: 1.1rem;
+    float: right;
+  }
+
+  .panel-type {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--accent);
+  }
+
+  .panel h2 {
+    font-family: var(--font-display);
+    font-size: 1.35rem;
+    margin: 34px 0 20px;
+    clear: both;
+  }
+
+  .panel dl { display: grid; gap: 16px; }
+  .panel dt {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--text-faint);
+  }
+  .panel dd { margin-top: 3px; font-size: 0.92rem; }
+
+  .panel .btn-primary { margin-top: 28px; width: 100%; }
+
+  /* ---------- vault ---------- */
+
+  .vault-grid {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 20px;
+    margin-top: 28px;
+    align-items: start;
+  }
+
+  @media (max-width: 800px) {
+    .vault-grid { grid-template-columns: 1fr; }
+  }
+
+  .vault-panel {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    padding: 20px;
+  }
+
+  .drop-zone {
+    border: 1px dashed var(--line);
+    border-radius: var(--radius-sm);
+    padding: 30px 16px;
+    text-align: center;
+    cursor: pointer;
+    color: var(--text-muted);
+    transition: border-color 0.15s ease, background 0.15s ease;
+  }
+
+  .drop-zone:hover, .drop-zone.dragover {
+    border-color: var(--accent);
+    background: rgba(76, 111, 255, 0.06);
+  }
+
+  .drop-zone-icon {
+    width: 36px;
+    height: 36px;
+    margin: 0 auto 10px;
+    border-radius: 50%;
+    border: 1px solid var(--line);
+    display: grid;
+    place-items: center;
+    color: var(--accent);
+  }
+
+  .drop-zone strong { color: var(--text); display: block; font-size: 0.92rem; margin-bottom: 4px; }
+  .drop-zone .hint { font-size: 0.76rem; color: var(--text-faint); margin-top: 6px; }
+
+  .field-label {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--text-faint);
+    margin: 20px 0 8px;
+  }
+
+  select#categorySelect { width: 100%; }
+
+  .vault-toolbar {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+
+  .vault-toolbar .search-field { flex: 1 1 200px; padding: 8px 12px; }
+
+  table.vault-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .vault-table thead th {
+    text-align: left;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    color: var(--text-faint);
+    font-weight: 500;
+    padding: 0 8px 10px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .vault-table td {
+    padding: 13px 8px;
+    border-bottom: 1px solid var(--line);
+    font-size: 0.88rem;
+  }
+
+  .vault-table td.mono { font-family: var(--font-mono); color: var(--text-muted); font-size: 0.82rem; }
+
+  .doc-name { font-weight: 600; }
+  .doc-actions { display: flex; gap: 14px; justify-content: flex-end; }
+  .doc-actions button {
+    background: none;
+    border: none;
+    font-family: var(--font-body);
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--accent);
+    cursor: pointer;
+  }
+  .doc-actions button.danger { color: #E5604F; }
+  .doc-actions button:disabled { color: var(--text-faint); cursor: not-allowed; }
+
+  .cat-tag {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--text-muted);
+  }
+
+  /* ---------- footer ---------- */
+
+  .app-footer {
+    border-top: 1px solid var(--line);
+    padding: 24px;
+    text-align: center;
+    color: var(--text-faint);
+    font-size: 0.78rem;
+  }
+</style>
 </head>
 <body>
 
-<%@ include file="includes/header.jspf" %>
+<header class="app-header">
+  <div class="header-row">
+    <div class="brand">
+      <span class="brand-mark">EF</span>
+      EduFinance&nbsp;Hub
+    </div>
+    <nav class="tabs" role="tablist" aria-label="Sections">
+      <button class="tab-btn" role="tab" aria-selected="true" data-view="overview">Overview</button>
+      <button class="tab-btn" role="tab" aria-selected="false" data-view="discovery">Discovery</button>
+      <button class="tab-btn" role="tab" aria-selected="false" data-view="vault">Vault</button>
+    </nav>
+  </div>
+</header>
 
-<main class="page">
-    <div class="page-heading">
-        <h1>Discovery</h1>
-        <p>Browse funding opportunities. This screen is frontend-only: results are generated
-           from sample data in the browser, no server call is made.</p>
+<div class="shell">
+
+  <!-- ===================== OVERVIEW ===================== -->
+  <section class="view is-active" id="view-overview">
+    <div class="hero">
+      <svg class="hero-grid-bg" viewBox="0 0 1000 400" preserveAspectRatio="none" aria-hidden="true">
+        <defs>
+          <linearGradient id="fade" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#4C6FFF" stop-opacity="0.35"/>
+            <stop offset="100%" stop-color="#4C6FFF" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
+        <g stroke="url(#fade)" stroke-width="1">
+          <line x1="0" y1="40" x2="1000" y2="40"/>
+          <line x1="0" y1="90" x2="1000" y2="90"/>
+          <line x1="0" y1="140" x2="1000" y2="140"/>
+          <line x1="120" y1="0" x2="120" y2="400"/>
+          <line x1="320" y1="0" x2="320" y2="400"/>
+          <line x1="520" y1="0" x2="520" y2="400"/>
+          <line x1="720" y1="0" x2="720" y2="400"/>
+          <line x1="920" y1="0" x2="920" y2="400"/>
+        </g>
+        <circle cx="320" cy="90" r="3" fill="#F2A93B"/>
+        <circle cx="720" cy="40" r="3" fill="#4C6FFF"/>
+      </svg>
+
+      <div class="hero-inner">
+        <p class="eyebrow-line">Student financial toolkit</p>
+        <h1>Find funding. Track every document.</h1>
+        <p class="lede">One workspace for discovering bursaries, scholarships and grants, and keeping the paperwork behind every application in a single, organised vault.</p>
+        <div class="hero-actions">
+          <button class="btn btn-primary" data-goto="discovery">Browse opportunities</button>
+          <button class="btn btn-ghost" data-goto="vault">Open vault</button>
+        </div>
+
+        <div class="stat-rail">
+          <div class="stat">
+            <div class="stat-value" data-count="7">0</div>
+            <div class="stat-label">Open opportunities matched</div>
+          </div>
+          <div class="stat">
+            <div class="stat-value" data-count="3">0<span class="unit">docs</span></div>
+            <div class="stat-label">Stored in your vault</div>
+          </div>
+          <div class="stat">
+            <div class="stat-value" data-count="18">0<span class="unit">days</span></div>
+            <div class="stat-label">Until nearest deadline</div>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <section class="filter-bar" aria-label="Search and filter opportunities">
-        <input type="text" id="searchInput" placeholder="Search by name or keyword..." aria-label="Search">
-
-        <select id="typeFilter" aria-label="Filter by type">
-            <option value="all">All types</option>
-            <option value="Bursary">Bursary</option>
-            <option value="Scholarship">Scholarship</option>
-            <option value="Grant">Grant</option>
-        </select>
-
-        <select id="levelFilter" aria-label="Filter by study level">
-            <option value="all">All study levels</option>
-            <option value="Undergraduate">Undergraduate</option>
-            <option value="Postgraduate">Postgraduate</option>
-            <option value="TVET/Diploma">TVET / Diploma</option>
-        </select>
-
-        <select id="sortFilter" aria-label="Sort results">
-            <option value="deadline">Sort: Closest deadline</option>
-            <option value="name">Sort: Name (A-Z)</option>
-        </select>
-    </section>
-
-    <p id="resultCount" class="result-count"></p>
-
-    <section id="resultsGrid" class="results-grid" aria-live="polite">
-        <!-- Populated by js/discovery.js -->
-    </section>
-
-    <p id="emptyState" class="empty-state" hidden>No opportunities match your search. Try different filters.</p>
-</main>
-
-<!-- Detail modal -->
-<div id="detailModal" class="modal" hidden>
-    <div class="modal-content">
-        <button class="modal-close" id="modalClose" aria-label="Close">&times;</button>
-        <span id="modalType" class="badge"></span>
-        <h2 id="modalName"></h2>
-        <dl class="modal-meta">
-            <dt>Deadline</dt><dd id="modalDeadline"></dd>
-            <dt>Study level</dt><dd id="modalLevel"></dd>
-            <dt>Requirements</dt><dd id="modalRequirements"></dd>
-        </dl>
-        <p id="modalDescription"></p>
-        <button class="btn btn-primary" id="modalApply">Start application</button>
+    <div class="section-heading">
+      <h2>Where to start</h2>
     </div>
+    <div class="feature-pair">
+      <div class="feature-card" data-goto="discovery">
+        <div class="kicker">01 · Discover</div>
+        <h3>Search funding</h3>
+        <p>Filter bursaries, scholarships and grants by type and study level, and see deadlines at a glance.</p>
+      </div>
+      <div class="feature-card" data-goto="vault">
+        <div class="kicker">02 · Store</div>
+        <h3>Build your vault</h3>
+        <p>Upload IDs, transcripts and letters once, tag them, and reuse them across applications.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== DISCOVERY ===================== -->
+  <section class="view" id="view-discovery">
+    <div class="page-head">
+      <h1>Discovery</h1>
+      <p>Browse funding opportunities. Everything below runs in your browser against sample data — nothing is sent to a server.</p>
+    </div>
+
+    <div class="control-row">
+      <div class="search-field">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="searchInput" placeholder="Search by name or keyword">
+      </div>
+      <select class="control-select" id="sortFilter">
+        <option value="deadline">Sort — closest deadline</option>
+        <option value="name">Sort — name A–Z</option>
+      </select>
+    </div>
+
+    <div class="chip-row" id="typeChips">
+      <button class="chip" aria-pressed="true" data-type="all">All types</button>
+      <button class="chip" aria-pressed="false" data-type="Bursary">Bursary</button>
+      <button class="chip" aria-pressed="false" data-type="Scholarship">Scholarship</button>
+      <button class="chip" aria-pressed="false" data-type="Grant">Grant</button>
+    </div>
+    <div class="chip-row" id="levelChips">
+      <button class="chip" aria-pressed="true" data-level="all">All levels</button>
+      <button class="chip" aria-pressed="false" data-level="Undergraduate">Undergraduate</button>
+      <button class="chip" aria-pressed="false" data-level="Postgraduate">Postgraduate</button>
+      <button class="chip" aria-pressed="false" data-level="TVET/Diploma">TVET / Diploma</button>
+    </div>
+
+    <p class="result-meta" id="resultCount"></p>
+    <div class="opp-list" id="oppList"></div>
+    <p class="empty-state" id="emptyState" hidden>No opportunities match your filters. Try widening your search.</p>
+  </section>
+
+  <!-- ===================== VAULT ===================== -->
+  <section class="view" id="view-vault">
+    <div class="page-head">
+      <h1>Documentation Vault</h1>
+      <p>Upload and organise the documents your applications need. Files stay in this browser tab for the session and are never uploaded anywhere.</p>
+    </div>
+
+    <div class="vault-grid">
+      <div class="vault-panel">
+        <div class="drop-zone" id="dropZone" tabindex="0" role="button" aria-label="Upload documents">
+          <div class="drop-zone-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19V6M5 12l7-7 7 7"/></svg>
+          </div>
+          <strong>Drag files here or click to browse</strong>
+          <span>PDF, DOCX, JPG or PNG</span>
+          <span class="hint">Up to 10MB each</span>
+          <input type="file" id="fileInput" multiple hidden accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
+        </div>
+
+        <label class="field-label" for="categorySelect">Category for next upload</label>
+        <select class="control-select" id="categorySelect">
+          <option>Identification</option>
+          <option>Academic Record</option>
+          <option>Proof of Income</option>
+          <option>Motivation Letter</option>
+          <option>Other</option>
+        </select>
+      </div>
+
+      <div class="vault-panel">
+        <div class="vault-toolbar">
+          <div class="search-field">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" id="vaultSearch" placeholder="Search documents">
+          </div>
+          <select class="control-select" id="vaultCategoryFilter">
+            <option value="all">All categories</option>
+            <option>Identification</option>
+            <option>Academic Record</option>
+            <option>Proof of Income</option>
+            <option>Motivation Letter</option>
+            <option>Other</option>
+          </select>
+        </div>
+
+        <table class="vault-table">
+          <thead>
+            <tr><th>Document</th><th>Category</th><th>Added</th><th>Size</th><th></th></tr>
+          </thead>
+          <tbody id="vaultTableBody"></tbody>
+        </table>
+        <p class="empty-state" id="vaultEmptyState" hidden>No documents yet — upload your first file.</p>
+      </div>
+    </div>
+  </section>
+
 </div>
 
-<%@ include file="includes/footer.jspf" %>
+<footer class="app-footer">EduFinance Hub — student financial toolkit prototype. No data leaves your browser.</footer>
 
-<script src="${pageContext.request.contextPath}/js/discovery.js"></script>
+<!-- Detail panel -->
+<div class="panel-overlay" id="detailOverlay" hidden>
+  <div class="panel" role="dialog" aria-modal="true" aria-label="Opportunity details">
+    <button class="panel-close" id="panelClose" aria-label="Close">&times;</button>
+    <p class="panel-type" id="panelType"></p>
+    <h2 id="panelName"></h2>
+    <dl>
+      <div><dt>Deadline</dt><dd id="panelDeadline"></dd></div>
+      <div><dt>Study level</dt><dd id="panelLevel"></dd></div>
+      <div><dt>Requirements</dt><dd id="panelRequirements"></dd></div>
+      <div><dt>About</dt><dd id="panelDescription"></dd></div>
+    </dl>
+    <button class="btn btn-primary" id="panelApply">Start application</button>
+  </div>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  /* ---------- tab navigation ---------- */
+  const tabs = document.querySelectorAll(".tab-btn");
+  const views = document.querySelectorAll(".view");
+
+  function goto(view) {
+    tabs.forEach(t => t.setAttribute("aria-selected", t.dataset.view === view ? "true" : "false"));
+    views.forEach(v => v.classList.toggle("is-active", v.id === "view-" + view));
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  tabs.forEach(t => t.addEventListener("click", () => goto(t.dataset.view)));
+  document.querySelectorAll("[data-goto]").forEach(el =>
+    el.addEventListener("click", () => goto(el.dataset.goto))
+  );
+
+  /* ---------- hero stat count-up (single orchestrated moment) ---------- */
+  document.querySelectorAll(".stat-value").forEach(function (el) {
+    const target = parseInt(el.dataset.count, 10);
+    const unit = el.querySelector(".unit");
+    const unitHTML = unit ? unit.outerHTML : "";
+    let current = 0;
+    const step = Math.max(1, Math.round(target / 24));
+    const tick = () => {
+      current = Math.min(target, current + step);
+      el.innerHTML = current + unitHTML;
+      if (current < target) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  });
+
+  /* ---------- discovery data ---------- */
+  const OPPORTUNITIES = [
+    { id: 1, name: "National Student Financial Aid Scheme (NSFAS)", type: "Bursary", level: "Undergraduate", deadline: "2026-11-30", requirements: "South African citizen, household income below threshold, accepted at a public institution.", description: "Covers tuition, accommodation and a living allowance for qualifying undergraduate students." },
+    { id: 2, name: "Sasol Bursary Programme", type: "Bursary", level: "Undergraduate", deadline: "2026-10-15", requirements: "Studying Engineering, Science or a related field, minimum 70% average.", description: "Full cost of study plus vacation work and mentorship in the energy and chemicals sector." },
+    { id: 3, name: "Mastercard Foundation Scholars Program", type: "Scholarship", level: "Postgraduate", deadline: "2027-01-20", requirements: "Demonstrated leadership potential and financial need.", description: "Comprehensive scholarship covering tuition, accommodation and mentoring for postgraduate study." },
+    { id: 4, name: "Funza Lushaka Bursary", type: "Bursary", level: "Undergraduate", deadline: "2026-09-30", requirements: "Enrolled in an approved teacher education programme.", description: "Supports students training to become teachers in priority subject areas." },
+    { id: 5, name: "TVET Skills Development Grant", type: "Grant", level: "TVET/Diploma", deadline: "2026-12-05", requirements: "Registered at a TVET college for an NC(V) or Report 191 programme.", description: "Short-term grant to cover materials, transport and exam fees for TVET students." },
+    { id: 6, name: "Allan Gray Orbis Fellowship", type: "Scholarship", level: "Undergraduate", deadline: "2026-08-31", requirements: "Entrepreneurial ambition, strong academic record, matric pass.", description: "Fully funded study plus entrepreneurial training and a fellowship network." },
+    { id: 7, name: "Postgraduate Research Grant", type: "Grant", level: "Postgraduate", deadline: "2027-02-10", requirements: "Registered for Honours, Masters or PhD with an approved research proposal.", description: "Funding toward research costs, data collection and conference attendance." }
+  ];
+
+  let activeType = "all";
+  let activeLevel = "all";
+
+  const searchInput = document.getElementById("searchInput");
+  const sortFilter = document.getElementById("sortFilter");
+  const oppList = document.getElementById("oppList");
+  const resultCount = document.getElementById("resultCount");
+  const emptyState = document.getElementById("emptyState");
+
+  function formatDate(iso) {
+    return new Date(iso + "T00:00:00").toLocaleDateString("en-ZA", { year: "numeric", month: "short", day: "numeric" });
+  }
+  function daysUntil(iso) {
+    const diff = new Date(iso + "T00:00:00") - new Date(new Date().toDateString());
+    return Math.round(diff / 86400000);
+  }
+  function typeClass(type) {
+    return "type-" + type.toLowerCase();
+  }
+
+  function renderDiscovery() {
+    const q = searchInput.value.trim().toLowerCase();
+    let list = OPPORTUNITIES.filter(o =>
+      (activeType === "all" || o.type === activeType) &&
+      (activeLevel === "all" || o.level === activeLevel) &&
+      (!q || o.name.toLowerCase().includes(q) || o.description.toLowerCase().includes(q))
+    );
+    list = sortFilter.value === "name"
+      ? list.slice().sort((a, b) => a.name.localeCompare(b.name))
+      : list.slice().sort((a, b) => new Date(a.deadline) - new Date(b.deadline));
+
+    resultCount.textContent = list.length + (list.length === 1 ? " opportunity" : " opportunities");
+    emptyState.hidden = list.length !== 0;
+    oppList.innerHTML = "";
+
+    list.forEach(o => {
+      const row = document.createElement("div");
+      row.className = "opp-row";
+      row.tabIndex = 0;
+      const d = daysUntil(o.deadline);
+      row.innerHTML =
+        '<span class="opp-accent ' + typeClass(o.type) + '"></span>' +
+        '<div class="opp-main">' +
+          '<span class="opp-type">' + o.type + '</span>' +
+          '<h3>' + o.name + '</h3>' +
+          '<p class="opp-level">' + o.level + '</p>' +
+        '</div>' +
+        '<div class="opp-deadline"><span class="label">' + (d >= 0 ? d + " days left" : "closed") + '</span>' + formatDate(o.deadline) + '</div>' +
+        '<span class="opp-arrow">&rsaquo;</span>';
+      row.addEventListener("click", () => openPanel(o));
+      row.addEventListener("keydown", e => { if (e.key === "Enter") openPanel(o); });
+      oppList.appendChild(row);
+    });
+  }
+
+  document.querySelectorAll("#typeChips .chip").forEach(chip => {
+    chip.addEventListener("click", () => {
+      document.querySelectorAll("#typeChips .chip").forEach(c => c.setAttribute("aria-pressed", "false"));
+      chip.setAttribute("aria-pressed", "true");
+      activeType = chip.dataset.type;
+      renderDiscovery();
+    });
+  });
+  document.querySelectorAll("#levelChips .chip").forEach(chip => {
+    chip.addEventListener("click", () => {
+      document.querySelectorAll("#levelChips .chip").forEach(c => c.setAttribute("aria-pressed", "false"));
+      chip.setAttribute("aria-pressed", "true");
+      activeLevel = chip.dataset.level;
+      renderDiscovery();
+    });
+  });
+  searchInput.addEventListener("input", renderDiscovery);
+  sortFilter.addEventListener("change", renderDiscovery);
+
+  /* ---------- detail panel ---------- */
+  const overlay = document.getElementById("detailOverlay");
+  const panelType = document.getElementById("panelType");
+  const panelName = document.getElementById("panelName");
+  const panelDeadline = document.getElementById("panelDeadline");
+  const panelLevel = document.getElementById("panelLevel");
+  const panelRequirements = document.getElementById("panelRequirements");
+  const panelDescription = document.getElementById("panelDescription");
+
+  function openPanel(o) {
+    panelType.textContent = o.type;
+    panelName.textContent = o.name;
+    panelDeadline.textContent = formatDate(o.deadline);
+    panelLevel.textContent = o.level;
+    panelRequirements.textContent = o.requirements;
+    panelDescription.textContent = o.description;
+    overlay.hidden = false;
+  }
+  function closePanel() { overlay.hidden = true; }
+
+  document.getElementById("panelClose").addEventListener("click", closePanel);
+  overlay.addEventListener("click", e => { if (e.target === overlay) closePanel(); });
+  document.addEventListener("keydown", e => { if (e.key === "Escape") closePanel(); });
+  document.getElementById("panelApply").addEventListener("click", () =>
+    alert("This is a discovery prototype — the application flow isn't implemented yet.")
+  );
+
+  /* ---------- vault ---------- */
+  let nextId = 1;
+  const documents = [
+    seed("Certified ID copy.pdf", "Identification", "2026-08-02", 182 * 1024),
+    seed("Matric certificate.pdf", "Academic Record", "2026-08-02", 640 * 1024),
+    seed("Motivation letter - draft.docx", "Motivation Letter", "2026-09-10", 34 * 1024)
+  ];
+  function seed(name, category, dateAdded, sizeBytes) {
+    return { id: nextId++, name, category, dateAdded, sizeBytes, url: null };
+  }
+
+  const dropZone = document.getElementById("dropZone");
+  const fileInput = document.getElementById("fileInput");
+  const categorySelect = document.getElementById("categorySelect");
+  const vaultBody = document.getElementById("vaultTableBody");
+  const vaultEmpty = document.getElementById("vaultEmptyState");
+  const vaultSearch = document.getElementById("vaultSearch");
+  const vaultCategoryFilter = document.getElementById("vaultCategoryFilter");
+
+  function formatSize(bytes) {
+    if (bytes < 1024) return bytes + " B";
+    if (bytes < 1024 * 1024) return Math.round(bytes / 1024) + " KB";
+    return (bytes / (1024 * 1024)).toFixed(1) + " MB";
+  }
+
+  function addFiles(fileList) {
+    Array.from(fileList).forEach(file => {
+      documents.push({
+        id: nextId++,
+        name: file.name,
+        category: categorySelect.value,
+        dateAdded: new Date().toISOString().slice(0, 10),
+        sizeBytes: file.size,
+        url: URL.createObjectURL(file)
+      });
+    });
+    renderVault();
+  }
+
+  function removeDoc(id) {
+    const i = documents.findIndex(d => d.id === id);
+    if (i === -1) return;
+    if (documents[i].url) URL.revokeObjectURL(documents[i].url);
+    documents.splice(i, 1);
+    renderVault();
+  }
+
+  function renderVault() {
+    const q = vaultSearch.value.trim().toLowerCase();
+    const cat = vaultCategoryFilter.value;
+    const visible = documents.filter(d =>
+      (!q || d.name.toLowerCase().includes(q)) && (cat === "all" || d.category === cat)
+    );
+    vaultBody.innerHTML = "";
+    vaultEmpty.hidden = visible.length !== 0;
+
+    visible.forEach(doc => {
+      const tr = document.createElement("tr");
+      tr.innerHTML =
+        '<td class="doc-name">' + doc.name + '</td>' +
+        '<td class="cat-tag">' + doc.category + '</td>' +
+        '<td class="mono">' + formatDate(doc.dateAdded) + '</td>' +
+        '<td class="mono">' + formatSize(doc.sizeBytes) + '</td>';
+      const actions = document.createElement("td");
+      actions.className = "doc-actions";
+      const viewBtn = document.createElement("button");
+      viewBtn.textContent = "View";
+      viewBtn.disabled = !doc.url;
+      viewBtn.addEventListener("click", () => doc.url && window.open(doc.url, "_blank"));
+      const delBtn = document.createElement("button");
+      delBtn.textContent = "Remove";
+      delBtn.className = "danger";
+      delBtn.addEventListener("click", () => removeDoc(doc.id));
+      actions.appendChild(viewBtn);
+      actions.appendChild(delBtn);
+      tr.appendChild(actions);
+      vaultBody.appendChild(tr);
+    });
+  }
+
+  dropZone.addEventListener("click", () => fileInput.click());
+  dropZone.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") fileInput.click(); });
+  fileInput.addEventListener("change", () => { if (fileInput.files.length) addFiles(fileInput.files); fileInput.value = ""; });
+  ["dragenter", "dragover"].forEach(evt => dropZone.addEventListener(evt, e => { e.preventDefault(); dropZone.classList.add("dragover"); }));
+  ["dragleave", "drop"].forEach(evt => dropZone.addEventListener(evt, e => { e.preventDefault(); dropZone.classList.remove("dragover"); }));
+  dropZone.addEventListener("drop", e => { if (e.dataTransfer && e.dataTransfer.files.length) addFiles(e.dataTransfer.files); });
+  vaultSearch.addEventListener("input", renderVault);
+  vaultCategoryFilter.addEventListener("change", renderVault);
+
+  renderDiscovery();
+  renderVault();
+})();
+</script>
 </body>
 </html>
-
